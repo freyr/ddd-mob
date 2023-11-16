@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Freyr\MT\MergeTrain\DomainModel;
+namespace Freyr\MT\MergeTrain\DomainModel\Changes;
+
+use Freyr\MT\MergeTrain\DomainModel\Sha;
 
 class Changes
 {
@@ -14,14 +16,18 @@ class Changes
     {
         $this->changes[] = $change;
     }
-    public function intersect(Changes $changes): void
+    public function intersect(Changes $changes): Changes
     {
+        $addedChanges = new Changes();
         /** @var Change $change */
         foreach ($changes as $change) {
             if (!$this->contains($change->changeId->sha)) {
                 $this->add($change);
+                $addedChanges->add($change);
             }
         }
+
+        return $addedChanges;
     }
 
     public function contains(Sha $sha): bool

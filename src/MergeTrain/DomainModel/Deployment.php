@@ -4,14 +4,35 @@ declare(strict_types=1);
 
 namespace Freyr\MT\MergeTrain\DomainModel;
 
-class Deployment
+use Freyr\MT\MergeTrain\DomainModel\Changes\Changes;
+use Freyr\MT\MergeTrain\DomainModel\Changes\ChangeSourceRepository;
+
+class Deployment extends AggregateRoot
 {
 
-    private HeadPointer $latestPointer;
-    private Changes $changes;
-
-    public function __construct(private ChangeSourceRepository $changeSourceRepository)
+    private function __construct(
+        private ChangeSourceRepository $changeSourceRepository,
+        private Changes $changes,
+        private HeadPointer $latestPointer,
+        private ProjectId $projectId
+    )
     {
+        //
+    }
+
+    public static function init(ProjectId $projectId, HeadPointer $headPointer): Deployment
+    {
+        $deployment = new Deployment();
+
+        $event = new NewDeploymentWasCreated();
+        $deployment->emit($event);
+
+        return $deployment;
+    }
+
+    public static function loadFromDb(ProjectId $projectId, HeadPointer $headPointer): Deployment
+    {
+
     }
 
     public function synchronizeChangesUpTo(HeadPointer $headPointer): void
@@ -24,7 +45,12 @@ class Deployment
         }
 
         $changes = $this->changeSourceRepository->load($this->latestPointer, $headPointer);
-        $this->changes->intersect($changes);
-        //ommit merges between: ////
+
+
+        $changesAdded = $this->changes->intersect($changes);
+        $this->latestPointer = $headPointer;
+
+        $event = new NewChangesWereSynchronizedUpTo($this->projectId, $changesAdded, $this->latestPointer);
+        $this->emit($event);
     }
 }

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Freyr\MT\MergeTrain\DomainModel;
 
-class Change
+abstract class DomainEvent
 {
 
-    public ChangeId $changeId;
 }
