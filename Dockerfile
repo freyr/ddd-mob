@@ -3,6 +3,7 @@ RUN apk add \
     libzip-dev \
     unzip \
     vim \
+    shadow \
     bash
 RUN apk add --update linux-headers --update-cache --virtual .build-deps ${PHPIZE_DEPS} \
     && pecl install xdebug-3.2.1 \
@@ -12,6 +13,7 @@ RUN apk add --update linux-headers --update-cache --virtual .build-deps ${PHPIZE
     && docker-php-ext-enable xdebug \
     && apk del .build-deps ${PHPIZE_DEPS} \
     && docker-php-source delete
+RUN usermod -u 1000 www-data
 
 ENV COMPOSER_HOME /.composer
 COPY --from=composer/composer:2-bin /composer /usr/bin/composer

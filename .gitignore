@@ -1,3 +1,5 @@
 .env
 .phpunit.result.cache
 vendor
+.idea/codeception.xml
+.idea/phpspec.xml
