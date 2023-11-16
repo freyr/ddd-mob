@@ -1,5 +1,5 @@
 setup:
-	docker compose run --rm setup
+	docker-compose run --rm setup
 
 test:
-	docker compose run --rm php vendor/bin/phpunit
+	docker-compose run --rm php vendor/bin/phpunit
