@@ -8,6 +8,7 @@ class Deployment
 {
 
     private HeadPointer $latestPointer;
+    private Changes $changes;
 
     public function __construct(private ChangeSourceRepository $changeSourceRepository)
     {
@@ -15,10 +16,15 @@ class Deployment
 
     public function synchronizeChangesUpTo(HeadPointer $headPointer): void
     {
+        if ($this->latestPointer === $headPointer) {
+            return;
+        }
+        if ($this->changes->contains($headPointer->sha)) {
+            return;
+        }
+
         $changes = $this->changeSourceRepository->load($this->latestPointer, $headPointer);
-        // remove duplicates
-
-
+        $this->changes->intersect($changes);
         //ommit merges between: ////
     }
 }

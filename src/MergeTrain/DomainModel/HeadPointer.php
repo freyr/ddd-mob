@@ -7,4 +7,5 @@ namespace Freyr\MT\MergeTrain\DomainModel;
 class HeadPointer
 {
 
+    readonly public Sha $sha;
 }

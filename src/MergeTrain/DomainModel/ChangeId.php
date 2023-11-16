@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Freyr\MT\MergeTrain\DomainModel;
 
-class Change
+class ChangeId
 {
 
-    public ChangeId $changeId;
+    readonly public Sha $sha;
 }
