@@ -1,9 +1,11 @@
 # ddd-mob
+https://github.com/freyr/ddd-mob
+
 
 ## How to
 To set up your environment maker sure that you have docker environment configured. 
 If not please install `Docker for Desktop` or any other compatible app.
-
+ 
 If Docker is running then execute command from CLI
 
 `make setup`
